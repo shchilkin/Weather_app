@@ -1,12 +1,7 @@
-# import os
 import csv
 from datetime import datetime
-#
-#
-# def clear():
-#     os.system("cls" if os.name == "nt" else "clear")
 
-data = []
+
 while True:
     print("""ACME WEATHER DATA APP
     1) Choose weather data file
@@ -17,21 +12,38 @@ while True:
     try:
         user_input = int(input("Choose what to do: "))
         if user_input == 0:
-            print("Option number 0 code here")
+            print("Exiting the program")
             quit()
         elif user_input == 1:
-            # TODO Choose weather data file
             try:
                 user_input = str(input("Please enter the CSV file name: "))
                 file = open(user_input, newline='')
                 print("Successfully opened {} reading contents...".format(user_input))
                 reader = csv.reader(file)
                 header = next(reader)
+                # print(header)
                 data = []
                 for row in reader:
-                    print(row)
-                print(header)
-                print(data)
+                    row = row[0].split(";")
+                    date = datetime.strptime(row[0], "%Y-%m-%d")
+                    precipitation = float(row[1])
+                    mean_temperature = float(row[2])
+                    minimum_temperature = float(row[3])
+                    maximum_temperature = float(row[4])
+                    typical_maximum_temperature = float(row[5])
+                    typical_maximum_temperature_1 = float(row[6])
+                    typical_minimum_temperature = float(row[7])
+                    typical_minimum_temperature_1 = float(row[8])
+                    fairly_typical_maximum_temperature = float(row[9])
+                    fairly_typical_maximum_temperature_1 = float(row[10])
+                    fairly_typical_minimum_temperature = float(row[11])
+                    fairly_typical_minimum_temperature_1 = float(row[12])
+                    data.append([date, precipitation, mean_temperature, minimum_temperature, maximum_temperature,
+                                 typical_maximum_temperature, typical_maximum_temperature_1,
+                                 typical_minimum_temperature, typical_minimum_temperature_1,
+                                 fairly_typical_maximum_temperature, fairly_typical_maximum_temperature_1,
+                                 fairly_typical_minimum_temperature, fairly_typical_minimum_temperature_1])
+                print("data", data)
 
             except FileNotFoundError:
                 print("File not found! Please enter the valid name of the file!")
@@ -50,4 +62,3 @@ while True:
     except ValueError:
         print("Please choose the menu option by choosing number from 1 to 4."
               " If you want to exit the program, enter 0\n")
-        # clear() #Clear terminal window comand
