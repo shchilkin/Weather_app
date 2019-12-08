@@ -2,7 +2,9 @@ import csv
 from datetime import datetime
 
 
-class data_loader:
+class data_processor:
+    data = []
+
     @staticmethod
     def data_loading():
         try:
@@ -11,10 +13,9 @@ class data_loader:
             print("Successfully opened {} reading contents...".format(file_name_input))
             reader = csv.reader(file)
             header = next(reader)
-            data = []
             for row in reader:
                 row = row[0].split(";")
-                date = datetime.strptime(row[0], "%Y-%m-%d")
+                date = datetime.strptime(row[0], "%Y-%m-%d").strftime("%d.%m")
                 precipitation = float(row[1])
                 mean_temperature = float(row[2])
                 minimum_temperature = float(row[3])
@@ -27,42 +28,55 @@ class data_loader:
                 fairly_typical_maximum_temperature_1 = float(row[10])
                 fairly_typical_minimum_temperature = float(row[11])
                 fairly_typical_minimum_temperature_1 = float(row[12])
-                data.append([date, precipitation, mean_temperature, minimum_temperature, maximum_temperature,
-                             typical_maximum_temperature, typical_maximum_temperature_1,
-                             typical_minimum_temperature, typical_minimum_temperature_1,
-                             fairly_typical_maximum_temperature, fairly_typical_maximum_temperature_1,
-                             fairly_typical_minimum_temperature, fairly_typical_minimum_temperature_1])
+                data_processor.data.append(
+                    [[date, precipitation, mean_temperature, minimum_temperature, maximum_temperature,
+                      typical_maximum_temperature, typical_maximum_temperature_1,
+                      typical_minimum_temperature, typical_minimum_temperature_1,
+                      fairly_typical_maximum_temperature, fairly_typical_maximum_temperature_1,
+                      fairly_typical_minimum_temperature, fairly_typical_minimum_temperature_1]])
             print("Loaded weather data from {}\n".format(file_name_input[:-4].capitalize()))
-            return data
         except FileNotFoundError:
             print("File not found! Please enter the valid name of the file!\n")
 
+    @staticmethod
+    def show_daily_data():
+        try:
+            if not data_processor.data:
+                print("Please, load the data by using the option 1 first!")
+            else:
+                user_date_input = str(input("Give a date (dd.mm): "))
+                given_date = datetime.strptime(user_date_input, "%d.%m").strftime("%d.%m")
+                data_found = False
+                for day_data in data_processor.data:
+                    if day_data[0][0] == given_date:
+                        print("day data [0][1]", day_data[0][1])
+                        average_temperature = day_data[0][2]
+                        lowest_temperature = day_data[0][3]
+                        highest_temperature = day_data[0][4]
+                        precipitation = day_data[0][1]
+                        print("The weather on {} was on average {} centigrade".format(given_date, average_temperature))
+                        print("The lowest temperature was {} and the highest temperature was {}".format(
+                            lowest_temperature, highest_temperature))
+                        print("There was {} mm rain".format(precipitation))
+                        data_found = True
+                        break
+                if not data_found:
+                    print("The data for entered date is not found in the dataset!")
+        except TypeError:
+            print("Please enter the valid date!")
+        print()
 
-def show_daily_data():
-    try:
-        data = None
-        # TODO add data variable to the data_loader class
-        user_date_input = str(input("Give a date (dd.mm): "))
-        given_date = datetime.strptime(user_date_input, "%d.%m")
-        average_temperature = 4
-        print(
-            "The weather on {} was on average {} centigrade".format(given_date.strftime("%d.%m"), average_temperature))
-    except TypeError:
-        print("Please enter the valid date!")
-    print()
-    # TODO See data for selected day
+    @staticmethod
+    def calculate_average():
+        # TODO Calculate average statistics for the data
+        print("Option number 3 code here")
+        print()
 
-
-def calculate_average():
-    # TODO Calculate average statistics for the data
-    print("Option number 3 code here")
-    print()
-
-
-def render_chart():
-    # TODO Print a scatterplot of the average temperatures
-    print("Option number 4 code here")
-    print()
+    @staticmethod
+    def render_chart():
+        # TODO Print a scatterplot of the average temperatures
+        print("Option number 4 code here")
+        print()
 
 
 while True:
@@ -77,13 +91,13 @@ while True:
         if user_input == 0:
             break
         elif user_input == 1:
-            data_loader.data_loading()
+            data_processor.data_loading()
         elif user_input == 2:
-            show_daily_data()
+            data_processor.show_daily_data()
         elif user_input == 3:
-            calculate_average()
+            data_processor.calculate_average()
         elif user_input == 4:
-            render_chart()
+            data_processor.render_chart()
         else:
             print("Please choose the menu option by choosing number from 1 to 4.")
     except ValueError:
