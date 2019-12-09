@@ -49,14 +49,14 @@ class data_processor:
                 data_found = False
                 for day_data in data_processor.data:
                     if day_data[0][0] == given_date:
-                        print("day data [0][1]", day_data[0][1])
                         average_temperature = day_data[0][2]
                         lowest_temperature = day_data[0][3]
                         highest_temperature = day_data[0][4]
                         precipitation = day_data[0][1]
-                        print("The weather on {} was on average {} centigrade".format(given_date, average_temperature))
-                        print("The lowest temperature was {} and the highest temperature was {}".format(
-                            lowest_temperature, highest_temperature))
+                        print("The weather on {} was on average {} centigrade"
+                              .format(given_date, average_temperature))
+                        print("The lowest temperature was {} and the highest temperature was {}"
+                              .format(lowest_temperature, highest_temperature))
                         print("There was {} mm rain".format(precipitation))
                         data_found = True
                         break
@@ -68,9 +68,29 @@ class data_processor:
 
     @staticmethod
     def calculate_average():
-        # TODO Calculate average statistics for the data
-        print("Option number 3 code here")
-        print()
+        average_temperature_list = []
+        average_lowest_temperature_list = []
+        average_highest_temperature_list = []
+        try:
+            if not data_processor.data:
+                print("Please, load the data by using the option 1 first!\n")
+            else:
+                for day_data in data_processor.data:
+                    average_temperature_list.append(day_data[0][2])
+                    average_lowest_temperature_list.append(day_data[0][3])
+                    average_highest_temperature_list.append(day_data[0][4])
+            average_temperature = round(
+                sum(average_temperature_list) / len(average_temperature_list), 2)
+            average_highest_temperature = round(
+                sum(average_highest_temperature_list) / len(average_highest_temperature_list), 2)
+            average_lowest_temperature = round(
+                sum(average_lowest_temperature_list) / len(average_lowest_temperature_list), 2)
+            print("The average temperature for the {} day period was {}"
+                  .format(len(average_temperature_list), average_temperature))
+            print("The average lowest temperature was {}".format(average_lowest_temperature))
+            print("The average highest temperature was {}\n".format(average_highest_temperature))
+        except ZeroDivisionError:
+            pass
 
     @staticmethod
     def render_chart():
