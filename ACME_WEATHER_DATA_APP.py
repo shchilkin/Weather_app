@@ -8,6 +8,7 @@ class data_processor:
     @staticmethod
     def data_loading():
         try:
+            data_processor.data = []
             file_name_input = str(input("Please enter the CSV file name: "))
             file = open(file_name_input, newline='')
             print("Successfully opened {} reading contents...".format(file_name_input))
@@ -94,9 +95,26 @@ class data_processor:
 
     @staticmethod
     def render_chart():
-        # TODO Print a scatterplot of the average temperatures
-        print("Option number 4 code here")
-        print()
+        if not data_processor.data:
+            print("Please, load the data by using the option 1 first!\n")
+        else:
+            def print_temperature_line(day_and_month, temp):
+                print(day_and_month + " ", end="")
+                print("   " * (round(temp) + 5) + "-", end="")
+                print()
+
+            def print_temperature_axis():
+                print("      ", end="")
+                for i in range(-5, 16):
+                    print("{:02d} ".format(i), end="")
+                print()
+
+            for day_data in data_processor.data:
+                date = day_data[0][0]
+                average_temperature = day_data[0][2]
+                print_temperature_line(date, average_temperature)
+            print_temperature_axis()
+            print()
 
 
 while True:
